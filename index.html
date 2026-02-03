@@ -887,6 +887,17 @@
             renderPlayerSelection();
         }
 
+        // Get optimized image URL (smaller, compressed)
+        function getSmallImage(url) {
+            // Add Cloudinary params for smaller images: 80px wide, 60% quality
+            return url.replace('/f_auto,q_auto/', '/f_auto,q_50,w_80,h_80,c_fill/');
+        }
+
+        function getMediumImage(url) {
+            // Medium size for player display: 120px
+            return url.replace('/f_auto,q_auto/', '/f_auto,q_60,w_120,h_120,c_fill/');
+        }
+
         // Render player selection grid
         function renderPlayerSelection() {
             const grid = document.getElementById('player-grid');
@@ -897,7 +908,7 @@
                 card.className = 'player-card';
                 card.onclick = () => selectPlayer(player, index);
                 card.innerHTML = `
-                    <img src="${player.picture}" alt="${player.name}" loading="lazy" onerror="this.src='https://via.placeholder.com/100?text=?'">
+                    <img src="${getSmallImage(player.picture)}" alt="${player.name}" loading="lazy" onerror="this.src='https://via.placeholder.com/100?text=?'">
                     <h3>${player.name}</h3>
                     <div class="position">${player.position}</div>
                 `;
@@ -937,7 +948,7 @@
 
         // Display user's player info
         function displayUserPlayer() {
-            document.getElementById('user-player-img').src = userPlayer.picture;
+            document.getElementById('user-player-img').src = getMediumImage(userPlayer.picture);
             document.getElementById('user-player-name').textContent = userPlayer.name;
             document.getElementById('user-position').textContent = userPlayer.position;
             document.getElementById('user-passing-yards').textContent = userPlayer.passingYards.toLocaleString();
@@ -971,7 +982,7 @@
                 const isEliminated = !remainingPlayers.includes(player);
                 if (isEliminated) div.classList.add('eliminated');
                 div.innerHTML = `
-                    <img src="${player.picture}" alt="${player.name}" loading="lazy" onerror="this.src='https://via.placeholder.com/40?text=?'">
+                    <img src="${getSmallImage(player.picture)}" alt="${player.name}" loading="lazy" onerror="this.src='https://via.placeholder.com/40?text=?'">
                     <div>${player.name.split(' ').pop()}</div>
                 `;
                 if (!isEliminated) div.onclick = () => showPlayerStats(player);
@@ -983,7 +994,7 @@
 
         // Show player stats modal
         function showPlayerStats(player) {
-            document.getElementById('modal-player-img').src = player.picture;
+            document.getElementById('modal-player-img').src = getMediumImage(player.picture);
             document.getElementById('modal-player-name').textContent = player.name;
             document.getElementById('modal-player-position').textContent = player.position;
             document.getElementById('modal-passing-yards').textContent = player.passingYards.toLocaleString();
